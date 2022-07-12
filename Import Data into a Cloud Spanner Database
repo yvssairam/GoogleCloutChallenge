@@ -1,0 +1,83 @@
+Import Data into a Cloud Spanner Database
+
+Challenge scenario:-
+
+In this challenge, you will import data from a Cloud Storage bucket into a Cloud Spanner (Google Standard SQL) database.
+
+The source data
+The source data is provided in a Cloud Storage source bucket named gs:// [bucket_name] as a CSV file named startrek.csv.
+
+The destination table
+You must create a Cloud Spanner instance with Name and Instance_id both set to Spanner instance name . Then create a database named Database name in your Spanner instance and a table in the new database named Table name .
+
+
+Table schema
+The schema of the Table name table should be as follows:
+
+Field Name	Type	Primary Key
+ShipName	STRING	
+Registry	STRING	Yes
+ShipClass	STRING	
+Description	STRING	
+
+
+Challenge tasks
+You will need to perform the following tasks to complete this challenge:
+
+Create the Cloud Spanner instance and the Google Standard SQL database in that instance using the names specified above.
+Create a table in the Cloud Spanner database with the correct name and schema as per the table above.
+Create a Cloud Spanner Import Manifest file named startrek.json and store it in the source Cloud Storage bucket.
+Create and run a Dataflow template job to successfully import the text data into the Cloud Spanner database.
+Note: The first attempt to run a Dataflow job in a lab session or new project may fail with a credential error. If this happens, simply clone the Dataflow job and run it again.
+
+Solution:
+
+gcloud auth list
+gcloud config list project
+gcloud config set project qwiklabs-gcp-04-6993ca0b7380
+sudo vi startrek.json
+
+
+{
+  "tables": [
+    {
+      "table_name": "TABLENAME",
+      "file_patterns": [
+        "gs://csv-startrek-xxxx/startrek.csv"
+      ],
+      "columns": [
+        {"column_name": "ShipName", "type_name": "STRING"},
+        {"column_name": "Registry", "type_name": "STRING"},
+        {"column_name": "ShipClass", "type_name": "STRING"},
+        {"column_name": "Description", "type_name": "STRING"}
+      ]
+    }
+  ]
+}
+
+gsutil cp startrek.json gs://your-unique-bucket/
+mkdir temp
+touch temp/file1
+gsutil cp -r temp gs://your-unique-bucket/
+gsutil ls gs://your-unique-bucket/
+
+gcloud spanner instances create [instance_id] --config=regional-us-central1 --description="your own description" --nodes=1
+gcloud spanner databases create [databasename] --instance=[instance_id] --ddl='CREATE TABLE TABLENAME (COL1 STRING(200),COL2 STRING(200),COL3 STRING(200),COL4 STRING(2560),) PRIMARY KEY(COL2)'
+
+gcloud dataflow jobs run my_own_job_001 \
+    --gcs-location gs://dataflow-templates/latest/GCS_Text_to_Cloud_Spanner \
+    --region [region_details] \
+--staging-location=gs://your-unique-bucket/temp \
+    --parameters \
+instanceId=[INSTANCE_ID],\
+databaseId=[DATABASE_NAME],\
+importManifest=gs://your-unique-bucket/startrek.json
+
+#GoogleClout
+Google Clout - Import Data into Cloud Spanner Challenge.
+
+0️⃣5️⃣	🟦🟦🟦⬜
+1️⃣0️⃣	⬜⬜⬜⬜
+1️⃣5️⃣	⬜⬜⬜⬜
+2️⃣0️⃣	⬜⬜⬜⬜
+
