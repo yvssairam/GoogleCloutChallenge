@@ -1,0 +1,56 @@
+Challenge scenario
+In this challenge, you will create a Cloud Function that is triggered by a Cloud Storage event. The Cloud Function provided, when linked to a storage trigger on a Cloud Storage bucket, should upload the event metadata for the Cloud Function to the Storage Bucket.
+
+
+The source code for the Cloud Function is provided in a folder named source in a Cloud Storage bucket named gs://cloud-training/clout/event-driven-functions. 
+You must copy this code to a folder in the Cloud Shell in this lab and then deploy it as a Cloud Function triggered on the google.storage.object.finalize event on a new Cloud Storage bucket called Cloud Function Bucket .
+
+Challenge tasks
+
+You will need to perform the following tasks to complete this challenge:
+
+Create a Cloud Storage bucket named Cloud Function Bucket .
+
+Create a Cloud Function using the sample code provided and deploy it to trigger on the google.storage.object.finalize event on the Cloud Storage bucket you created.
+
+Trigger the Cloud Function by copying any file to the Cloud Storage bucket you created. Note that files with a .json extension will be ignored by the function - this is to prevent it recursively triggering itself when it writes output to the bucket.
+
+Confirm that the expected JSON metadata file named cloud_fn_output.json is created in the Cloud Storage bucket you created.
+
+
+Solution:
+
+gcloud auth list
+gcloud config list project
+
+gsutil mb gs://<YOUR-BUCKET-NAME>
+gsutil cp -r gs://cloud-training/clout/event-driven-functions .
+
+cd /home/<CLOUD_DEV_SHELL_USER_ID>/event-driven-functions/source
+
+
+
+gcloud functions deploy cloud_function \
+--runtime python310 \
+--trigger-resource <YOUR-BUCKET-NAME> \
+--trigger-event google.storage.object.finalize
+
+
+
+touch gcf-test.txt
+
+gsutil cp gcf-test.txt gs://<YOUR-BUCKET-NAME>
+
+gcloud functions logs read --limit 50
+
+
+
+#GoogleClout
+Google Clout - Event Driven Cloud Functions Challenge.
+
+0️⃣5️⃣	🟦🟦🟦🟦
+1️⃣0️⃣	⬜⬜⬜⬜
+1️⃣5️⃣	⬜⬜⬜⬜
+2️⃣0️⃣	⬜⬜⬜⬜
+
+Challenge completed in 3 minutes and 7 seconds !
