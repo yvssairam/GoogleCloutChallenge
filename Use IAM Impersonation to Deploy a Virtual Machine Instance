@@ -1,0 +1,42 @@
+Use IAM Impersonation to Deploy a Virtual Machine Instance
+
+
+Challenge scenario
+To complete this challenge, you must deploy a new Compute Engine virtual machine using IAM service account impersonation.
+Your student account does not have sufficient direct permissions to perform the individual tasks that must be completed. Your student account has been granted the Service Account Token Creator role on the web-admin-sa IAM service account.
+The web-admin-sa IAM service account has been bound to the following roles so that it can be used to create all of the resources required to complete this challenge.
+* roles/storage.admin
+* roles/compute.admin
+* roles/storage.networkAdmin
+It has also been bound to the roles/serviceAccountUser role on the Default Compute Engine Service Account so that it can be used to deploy instances with that service account.
+Challenge tasks
+You will need to perform the following tasks to complete this challenge:
+1. Create a new storage bucket called gs://[SCRIPT-BUCKET] .
+2. Copy the startup script deploy-web-server.sh from the storage bucket gs://[SOURCE-BUCKET] to the storage bucket gs://[SCRIPT-BUCKET] .
+3. Add a new firewall rule to the default VCP network that allows Instances containing the tag http-serverto respond to web traffic from all addresses.
+4. Deploy a new virtual machine called WEB_SERVER that is configured to use deploy-web-server.sh as its startup script.
+
+Solution:
+
+IAM_SA_NAME=$(gcloud iam service-accounts list | grep web-admin | awk -F ':' '{print $2}')
+
+gcloud config set auth/impersonate_service_account $IAM_SA_NAME
+
+BUCKET_NAME=$(gcloud alpha storage ls | grep web)
+
+gcloud alpha storage buckets create gs://$GOOGLE_CLOUD_PROJECT-startup
+
+gcloud alpha storage cp $BUCKET_NAME\* gs://$GOOGLE_CLOUD_PROJECT-startup/
+
+gcloud compute firewall-rules create allow-http --target-tags http-server --source-ranges 0.0.0.0/0 --allow tcp:80
+
+gcloud compute instances create test-server --zone=us-central1-a --tags=http-server --metadata startup-script-url=gs://$GOOGLE_CLOUD_PROJECT-startup/deploy-web-server.sh
+
+
+#GoogleClout
+Google Clout - Use IAM Impersonation to Deploy a Virtual Machine Instance Challenge.
+0️⃣5️⃣	🟦🟦🟦🟦
+1️⃣0️⃣	⬜⬜⬜⬜
+1️⃣5️⃣	⬜⬜⬜⬜
+2️⃣0️⃣	⬜⬜⬜⬜
+Challenge completed in 1 minutes and 11 seconds !
