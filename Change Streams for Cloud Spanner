@@ -1,0 +1,40 @@
+Change Streams for Cloud Spanner
+
+The source table
+A Cloud Spanner instance named orders has been created for you in the dynamically selected lab startup region. In that instance is a database named orders-db and in that database an empty table named orders.
+
+Table schema
+The schema of the orders table in the source database is as follows:
+
+
+
+
+Challenge tasks
+You will need to perform the following tasks to complete this challenge:
+
+Create the following Google Cloud database resources:
+Create a small, single node, Cloud Spanner instance named Cloud Spanner Meta Instance in the dynamically selected lab startup region.
+Create a Cloud Spanner database named Cloud Spanner Meta Database in the Cloud Spanner metadata instance you just created.
+Create a BigQuery dataset in your lab project, located in the dynamically selected lab startup region, called BigQuery Dataset .
+Create a Cloud Spanner change stream named ordersstream on the orders table described in the introduction. This table was created for you when the lab started, and is initially empty.
+Create and run a regional Dataflow job named streamjob to import Cloud Spanner change streams data into BigQuery:
+You must use the Cloud Spanner change streams to BigQuery template.
+You must use the dynamically selected lab startup region as the Dataflow regional endpoint.
+You must configure the job to track changes in the orders-db database on the orders Cloud Spanner instance, using the new instance and database you created for the change streams metadata, and log the change stream data to the BigQuery dataset you created.
+Insert data into the orders table to trigger the change streams logging process.
+If you have configured everything correctly you will now see rows appearing in a new table named orders_changelog in your BigQuery dataset that contains the metadata related to the data you inserted into the Cloud Spanner orders table.
+
+You can insert some sample data into the Cloud Spanner orders table by executing the following query in the Cloud Spanner Query console:
+
+INSERT INTO orders(
+OrderID,
+CustomerID,
+OrderDate,
+Price,
+ProductID)
+VALUES(123, -- type: INT64
+456, -- type: INT64
+'2022-04-26', -- type: DATE
+99, -- type: INT64
+789 -- type: INT64
+);
