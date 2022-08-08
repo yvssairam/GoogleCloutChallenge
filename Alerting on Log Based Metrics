@@ -1,0 +1,20 @@
+Alerting on Log Based Metrics
+
+Challenge scenario
+In this mini-challenge lab you will create alerts on log-based metrics in GKE. When the lab starts there is a GKE cluster called log-metric deployed in your project. On the cluster there are two workloads deployed which generate Logging and Crashing logs.
+
+Your challenge is to create log-based metrics from the Logging and Crashing logs generated. Then you must create an alert for the Crashing metric and lastly, respond to that alert by acknowledging it in the Google Cloud Console.
+
+Hint: to find the logs for your metrics, you should filter on resource.type "k8s_container" and resource.labels.pod_name including "logging-" or "crashing-"
+
+Challenge Goals
+Your goals for solving this challenge are as follows:
+
+Create a log-based metric for the Logging app named Logging Metric .
+
+Create a log-based metric for the Crashing app named Crashing Metric .
+
+Create an alert for the Crashing metric called Crash Alert . You should use the sum operation with a threshold of 1 to ensure the alert fires as quickly as possible.
+
+Once an alert has fired, respond to the alert by acknowledging the alert incident in Google Cloud console.
+
